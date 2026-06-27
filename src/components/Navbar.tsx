@@ -38,8 +38,7 @@ export default function Navbar() {
     >
       <div className="mx-auto flex h-20 max-w-container-max items-center justify-between px-gutter">
         <Link href="/" className="flex items-center gap-2 font-headline-lg text-headline-lg font-bold tracking-tighter text-on-surface">
-          <img src={`${siteConfig.basePath}/icon/icono-removebg-preview.png`} alt="Lumeraq Logo" className="h-8 w-auto" />
-          LUMERAQ
+          <img src={`${siteConfig.basePath}/icon/logo-dark-horizontal-removebg-preview.png`} alt="Lumeraq Logo" className="h-15 w-auto" />
         </Link>
 
         <div className="hidden items-center gap-8 md:flex">

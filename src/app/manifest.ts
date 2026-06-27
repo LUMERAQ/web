@@ -13,7 +13,7 @@ export default function manifest() {
     background_color: '#0c1322',
     theme_color: '#2563eb',
     icons: [
-      { src: `${base}/icon/icono-removebg-preview.png`, sizes: 'any', type: 'image/png' },
+      { src: `${base}/icon/logo-dark-horizontal-removebg-preview.png`, sizes: 'any', type: 'image/png' },
     ],
   };
 }
