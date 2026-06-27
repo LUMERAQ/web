@@ -10,7 +10,7 @@ export default function sitemap() {
   for (const locale of routing.locales) {
     const prefix = locale === siteConfig.defaultLocale ? '' : `/${locale}`;
     urls.push({
-      url: `${siteUrl}${prefix}`,
+      url: `${siteUrl}${prefix}/`,
       lastModified: new Date(),
       changeFrequency: 'monthly' as const,
       priority: 1.0,
