@@ -5,7 +5,7 @@ export default function JsonLd({ locale }: { locale: string }) {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: siteConfig.name,
-    url: siteConfig.url,
+    url: `${siteConfig.url}${siteConfig.basePath}`,
     description: siteConfig.tagline,
     foundingDate: '2024',
     knowsAbout: [

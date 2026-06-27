@@ -20,9 +20,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const t = await getTranslations({ locale, namespace: 'hero' });
   const title = `LUMERAQ — ${t('subtitle')}`;
   const description = t('subtitle');
-  const siteUrl = siteConfig.url;
+  const siteUrl = `${siteConfig.url}${siteConfig.basePath}`;
   const path = locale === siteConfig.defaultLocale ? '' : `/${locale}`;
-  const canonical = `${siteUrl}${path ? path : ''}`;
+  const canonical = `${siteUrl}${path}`;
 
   return {
     title,
@@ -54,8 +54,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       images: ['/og-image.png'],
     },
     icons: {
-      icon: '/favicon.ico',
-      apple: '/img/icono-removebg-preview.png',
+      icon: `${siteConfig.basePath}/favicon.ico`,
+      apple: `${siteConfig.basePath}/icon/icono-removebg-preview.png`,
     },
   };
 }

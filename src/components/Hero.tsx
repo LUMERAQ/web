@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
+import { siteConfig } from '@/lib/site';
 
 export default function Hero() {
   const t = useTranslations('hero');
@@ -29,7 +30,7 @@ export default function Hero() {
 
       <div className="absolute inset-y-0 right-[0%] w-full md:w-[60%]">
         <img
-          src="/img/banner.jpg"
+          src={`${siteConfig.basePath}/img/banner.jpg`}
           alt=""
           className="h-full w-full object-cover"
         />

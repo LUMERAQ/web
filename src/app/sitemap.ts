@@ -4,7 +4,7 @@ import { siteConfig } from '@/lib/site';
 export const dynamic = 'force-static';
 
 export default function sitemap() {
-  const siteUrl = siteConfig.url;
+  const siteUrl = `${siteConfig.url}${siteConfig.basePath}`;
   const urls = [];
 
   for (const locale of routing.locales) {

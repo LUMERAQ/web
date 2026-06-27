@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import MaterialIcon from './MaterialIcon';
+import { siteConfig } from '@/lib/site';
 
 const navLinks = [
   { key: 'services', href: '#servicios' },
@@ -37,7 +38,7 @@ export default function Navbar() {
     >
       <div className="mx-auto flex h-20 max-w-container-max items-center justify-between px-gutter">
         <Link href="/" className="flex items-center gap-2 font-headline-lg text-headline-lg font-bold tracking-tighter text-on-surface">
-          <img src="/icon/icono-removebg-preview.png" alt="Lumeraq Logo" className="h-8 w-auto" />
+          <img src={`${siteConfig.basePath}/icon/icono-removebg-preview.png`} alt="Lumeraq Logo" className="h-8 w-auto" />
           LUMERAQ
         </Link>
 
