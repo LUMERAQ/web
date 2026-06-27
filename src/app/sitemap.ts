@@ -3,6 +3,10 @@ import { siteConfig } from '@/lib/site';
 
 export const dynamic = 'force-static';
 
+function toDateString(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 export default function sitemap() {
   const siteUrl = `${siteConfig.url}${siteConfig.basePath}`;
   const urls = [];
@@ -11,9 +15,9 @@ export default function sitemap() {
     const prefix = locale === siteConfig.defaultLocale ? '' : `/${locale}`;
     urls.push({
       url: `${siteUrl}${prefix}/`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly' as const,
-      priority: 1.0,
+      lastModified: toDateString(),
+      changeFrequency: 'weekly' as const,
+      priority: 1.0 as const,
     });
   }
 
