@@ -1,9 +1,13 @@
 import { ReactNode } from 'react';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '../../../i18n/routing';
 import SetHtmlLang from './SetHtmlLang';
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 type Props = {
   children: ReactNode;
@@ -21,6 +25,14 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   };
 }
 
+async function loadMessages(locale: string) {
+  try {
+    return (await import(`../../../messages/${locale}.json`)).default;
+  } catch {
+    return (await import(`../../../messages/${routing.defaultLocale}.json`)).default;
+  }
+}
+
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
 
@@ -28,10 +40,10 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  const messages = await getMessages();
+  const messages = await loadMessages(locale);
 
   return (
-    <NextIntlClientProvider messages={messages}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <SetHtmlLang locale={locale} />
       {children}
     </NextIntlClientProvider>
