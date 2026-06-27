@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "services": "Servicios",
+    "solutions": "Soluciones",
+    "about": "Nosotros",
+    "technology": "Tecnología",
+    "cases": "Casos de Éxito",
+    "contact": "Contacto",
+    "cta": "Solicitar Consultoría"
+  },
+  "hero": {
+    "badge": "Empoderando la Evolución Digital",
+    "title": "Transformamos <br> Tecnología en <br> <span class=\"text-secondary text-glow\">Resultados</span>",
+    "subtitle": "En LUMERAQ, fusionamos arquitectura de software de clase mundial con Inteligencia Artificial para crear ecosistemas digitales resilientes, seguros y escalables.",
+    "ctaPrimary": "Nuestra Trayectoria",
+    "floatingBadge": {
+      "title": "100% Seguridad",
+      "subtitle": "Arquitectura-First Logic"
+    }
+  },
+  "stats": {
+    "items": [
+      { "value": "+50", "label": "Proyectos Exitosos", "type": "number" },
+      { "value": "+30", "label": "Clientes Globales", "type": "number" },
+      { "value": "99.9", "label": "Disponibilidad", "type": "percent" },
+      { "value": "24", "label": "Soporte Estratégico", "type": "hours" }
+    ]
+  },
+  "coreFocus": {
+    "title": "Nuestros Pilares de Innovación",
+    "subtitle": "Metodologías disruptivas y tecnología de vanguardia para arquitecturas que crecen contigo.",
+    "items": [
+      { "title": "Transformación Digital", "description": "Reinventamos procesos analógicos en flujos de trabajo inteligentes y automatizados.", "icon": "transform", "colSpan": "md:col-span-8", "theme": "end" },
+      { "title": "IA Aplicada", "description": "Modelos predictivos integrados directamente en su núcleo operativo.", "icon": "psychology", "colSpan": "md:col-span-4", "theme": "center" },
+      { "title": "Arquitectura Escalable", "description": "Sistemas diseñados para soportar millones de peticiones sin degradación de servicio.", "icon": "architecture", "colSpan": "md:col-span-4", "theme": "default" },
+      { "title": "Seguridad de Nivel Enterprise", "description": "Protección integral de datos con estándares internacionales y encriptación de grado militar.", "icon": "shield_locked", "colSpan": "md:col-span-8", "theme": "flex" }
+    ]
+  },
+  "successCases": {
+    "title": "Historias de Éxito",
+    "subtitle": "Descubre cómo hemos ayudado a empresas líderes a superar sus desafíos técnicos más complejos.",
+    "viewAll": "Ver todos los casos",
+    "viewCase": "Ver Caso",
+    "problemLabel": "Problema:",
+    "solutionLabel": "Solución:",
+    "resultLabel": "Resultado:",
+    "cases": [
+      {
+        "industry": "Logística",
+        "title": "Optimización de Cadena de Suministro AI",
+        "problem": "Retrasos críticos en la última milla por falta de predicción de demanda.",
+        "solution": "Implementación de red neuronal para ruteo dinámico en tiempo real.",
+        "result": "Reducción del 22% en costos operativos."
+      },
+      {
+        "industry": "Fintech",
+        "title": "Seguridad Bancaria de Próxima Generación",
+        "problem": "Vulnerabilidades en el sistema de autenticación legado.",
+        "solution": "Arquitectura de microservicios con cifrado cuántico y biometría.",
+        "result": "Cero brechas de seguridad en 24 meses."
+      },
+      {
+        "industry": "Energía",
+        "title": "Control de Red Eléctrica Inteligente",
+        "problem": "Inestabilidad en la distribución de energías renovables.",
+        "solution": "Dashboard IoT de alta disponibilidad para balanceo de carga.",
+        "result": "Mejora del 40% en eficiencia energética."
+      }
+    ]
+  },
+  "cta": {
+    "title": "¿Listo para transformar tu empresa?",
+    "subtitle": "Hablemos de cómo nuestra tecnología puede convertirse en tu ventaja competitiva definitiva.",
+    "buttonPrimary": "Agenda una consultoría gratuita",
+    "buttonSecondary": "Explorar servicios"
+  },
+  "footer": {
+    "description": "Tecnología que transforma negocios a través de arquitectura de vanguardia.",
+    "company": "Empresa",
+    "companyLinks": ["Nosotros", "Tecnología", "Casos de Éxito"],
+    "legal": "Legal",
+    "legalLinks": ["Política de Privacidad", "Términos de Servicio"],
+    "newsletter": "Newsletter",
+    "newsletterDesc": "Recibe insights sobre el futuro de la IA y el software.",
+    "emailPlaceholder": "Email",
+    "rights": "Tecnología que transforma negocios."
+  }
+}

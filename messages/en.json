@@ -1,0 +1,88 @@
+{
+  "nav": {
+    "services": "Services",
+    "solutions": "Solutions",
+    "about": "About",
+    "technology": "Technology",
+    "cases": "Success Stories",
+    "contact": "Contact",
+    "cta": "Request a Consultation"
+  },
+  "hero": {
+    "badge": "Empowering Digital Evolution",
+    "title": "We transform <br> Technology into <br> <span class=\"text-secondary text-glow\">Results</span>",
+    "subtitle": "At LUMERAQ, we fuse world-class software architecture with Artificial Intelligence to create resilient, secure, and scalable digital ecosystems.",
+    "ctaPrimary": "Our Track Record",
+    "floatingBadge": {
+      "title": "100% Security",
+      "subtitle": "Architecture-First Logic"
+    }
+  },
+  "stats": {
+    "items": [
+      { "value": "+50", "label": "Successful Projects", "type": "number" },
+      { "value": "+30", "label": "Global Clients", "type": "number" },
+      { "value": "99.9", "label": "Availability", "type": "percent" },
+      { "value": "24", "label": "Strategic Support", "type": "hours" }
+    ]
+  },
+  "coreFocus": {
+    "title": "Our Innovation Pillars",
+    "subtitle": "Disruptive methodologies and cutting-edge technology for architectures that grow with you.",
+    "items": [
+      { "title": "Digital Transformation", "description": "We reinvent analog processes into intelligent, automated workflows.", "icon": "transform", "colSpan": "md:col-span-8", "theme": "end" },
+      { "title": "Applied AI", "description": "Predictive models integrated directly into your operational core.", "icon": "psychology", "colSpan": "md:col-span-4", "theme": "center" },
+      { "title": "Scalable Architecture", "description": "Systems designed to support millions of requests without service degradation.", "icon": "architecture", "colSpan": "md:col-span-4", "theme": "default" },
+      { "title": "Enterprise-Grade Security", "description": "Comprehensive data protection with international standards and military-grade encryption.", "icon": "shield_locked", "colSpan": "md:col-span-8", "theme": "flex" }
+    ]
+  },
+  "successCases": {
+    "title": "Success Stories",
+    "subtitle": "Discover how we have helped leading companies overcome their most complex technical challenges.",
+    "viewAll": "View all cases",
+    "viewCase": "View Case",
+    "problemLabel": "Problem:",
+    "solutionLabel": "Solution:",
+    "resultLabel": "Result:",
+    "cases": [
+      {
+        "industry": "Logistics",
+        "title": "AI Supply Chain Optimization",
+        "problem": "Critical last-mile delays due to lack of demand prediction.",
+        "solution": "Implementation of neural network for real-time dynamic routing.",
+        "result": "22% reduction in operational costs."
+      },
+      {
+        "industry": "Fintech",
+        "title": "Next-Generation Banking Security",
+        "problem": "Vulnerabilities in the legacy authentication system.",
+        "solution": "Microservices architecture with quantum encryption and biometrics.",
+        "result": "Zero security breaches in 24 months."
+      },
+      {
+        "industry": "Energy",
+        "title": "Smart Power Grid Control",
+        "problem": "Instability in renewable energy distribution.",
+        "solution": "High-availability IoT dashboard for load balancing.",
+        "result": "40% improvement in energy efficiency."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to transform your company?",
+    "subtitle": "Let's talk about how our technology can become your ultimate competitive advantage.",
+    "buttonPrimary": "Schedule a free consultation",
+    "buttonSecondary": "Explore services"
+  },
+  "footer": {
+    "description": "Technology that transforms businesses through cutting-edge architecture.",
+    "company": "Company",
+    "companyLinks": ["About", "Technology", "Success Stories"],
+    "legal": "Legal",
+    "legalLinks": ["Privacy Policy", "Terms of Service"],
+    "newsletter": "Newsletter",
+    "newsletterDesc": "Receive insights about the future of AI and software.",
+    "emailPlaceholder": "Email",
+    "rights": "Technology that transforms business."
+  }
+}
