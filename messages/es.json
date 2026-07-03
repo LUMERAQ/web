@@ -75,8 +75,8 @@
     "buttonSecondary": "Explorar servicios"
   },
   "chatbot": {
-    "title": "Asistente LUMERAQ",
-    "subtitle": "Agenda tu consultoría",
+    "title": "LUMIQ",
+    "subtitle": "Asistente virtual de LUMERAQ",
     "placeholder": "Escribe tu mensaje..."
   },
   "footer": {

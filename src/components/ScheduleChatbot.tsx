@@ -5,6 +5,9 @@ import { motion } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import MaterialIcon from './MaterialIcon';
 
+const N8N_URL = 'https://n8n-service-yavl.onrender.com/webhook/chatbot-stream';
+const N8N_API_KEY = 'eWQJHTTfwAhw7To2IYLdNseZlKiBUtjG56HCIn9k4JPQP2mybMxVwUwWpagO9qCuFM31x9HNoTSlSmAw3KhA5XKbS2eoVEYfdIJraHWqGPTcgwwEevXizDEOC7YzcchORZgDUsz4XWlvLbHc16JNrzMlyWYCuGvoyDQNTeEk678ILBArtGdkVmxy8tgRpy1B6GB7YdE6pToEd3sH2K6KdnBSw8DvknTQYJEE3tpmSmJb9nvMI80Yfo06JFOpdTjK';
+
 interface ChatMessage {
   id: string;
   role: 'bot' | 'user';
@@ -39,10 +42,12 @@ export default function ScheduleChatbot({ open, onClose }: Props) {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState('');
+  const [sessionId, setSessionId] = useState(() => Math.random().toString(36).substring(2, 18));
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const idCounter = useRef(0);
+  const streamState = useRef({ fullText: '', buffer: '', timeSlots: undefined as { start: string; end: string; label: string }[] | undefined });
   const nextId = useCallback(() => {
     idCounter.current += 1;
     return idCounter.current;
@@ -55,15 +60,13 @@ export default function ScheduleChatbot({ open, onClose }: Props) {
     setInput('');
     setLoading(false);
     setSelectedDate('');
+    setSessionId(Math.random().toString(36).substring(2, 18));
 
-    const greeting: ChatMessage = {
+    setMessages([{
       id: `bot-${nextId()}`,
       role: 'bot',
-      text: locale === 'es'
-        ? '¡Hola! 👋 Soy el asistente virtual de LUMERAQ. Puedo ayudarte a agendar una consultoría gratuita. ¿Te gustaría contarme sobre tu proyecto o necesidades?'
-        : 'Hello! 👋 I am LUMERAQ\'s virtual assistant. I can help you schedule a free consultation. Would you like to tell me about your project or needs?',
-    };
-    setMessages([greeting]);
+      text: ''
+    }]);
   }, [locale, nextId]);
 
   const scrollToBottom = useCallback(() => {
@@ -96,42 +99,141 @@ export default function ScheduleChatbot({ open, onClose }: Props) {
     setInput('');
     setLoading(true);
 
+    const botId = `bot-${nextId()}`;
+
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(N8N_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'API_KEY': N8N_API_KEY,
+        },
         body: JSON.stringify({
-          action: step,
-          data: { ...stepData, text, locale },
+          message: text.trim(),
+          sessionId,
         }),
       });
 
-      const data = await res.json();
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      const botMsg: ChatMessage = {
-        id: `bot-${nextId()}`,
-        role: 'bot',
-        text: data.reply,
-        type: data.actionData?.timeSlots ? 'timeSlots' : 'text',
-        timeSlots: data.actionData?.timeSlots,
-      };
-      setMessages((prev) => [...prev, botMsg]);
+      if (!res.body) throw new Error('No response body');
 
-      if (data.action) {
-        setStep(data.action as ChatStep);
-        if (data.actionData) {
-          setStepData((prev) => ({ ...prev, ...data.actionData }));
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      const s = streamState.current;
+      s.fullText = '';
+      s.buffer = '';
+      s.timeSlots = undefined;
+
+      setMessages((prev) => [...prev, { id: botId, role: 'bot', text: '' }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+          if (s.buffer.trim()) {
+            const trimmed = s.buffer.trim();
+            if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+              try {
+                const parsed = JSON.parse(trimmed);
+                if (parsed.type === 'item' && parsed.content) {
+                  s.fullText += parsed.content;
+                }
+                if (parsed.timeSlots) s.timeSlots = parsed.timeSlots;
+              } catch {
+                s.fullText += trimmed;
+              }
+            } else {
+              s.fullText += trimmed;
+            }
+          }
+          break;
+        }
+
+        s.buffer += decoder.decode(value, { stream: true });
+
+        const lines = s.buffer.split('\n');
+        s.buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+            try {
+              const parsed = JSON.parse(trimmed);
+              if (parsed.type === 'item' && parsed.content) {
+                s.fullText += parsed.content;
+              }
+              if (parsed.timeSlots) s.timeSlots = parsed.timeSlots;
+            } catch {
+              // ignore unparseable JSON
+            }
+          } else {
+            s.fullText += trimmed;
+          }
+        }
+
+        setMessages((prev) =>
+          prev.map((msg) => {
+            if (msg.id !== botId) return msg;
+            const updated: ChatMessage = { id: botId, role: 'bot', text: s.fullText };
+            if (s.timeSlots && s.timeSlots.length > 0) {
+              updated.type = 'timeSlots';
+              updated.timeSlots = s.timeSlots;
+            }
+            return updated;
+          })
+        );
+      }
+
+      // Extract output from JSON if the response is (or ends with) {"output":"..."}
+      try {
+        const parsed = JSON.parse(s.fullText);
+        if (parsed.output) {
+          s.fullText = parsed.output;
+        }
+      } catch {
+        for (let i = s.fullText.length - 1; i >= 0; i--) {
+          if (s.fullText[i] === '{') {
+            try {
+              const parsed = JSON.parse(s.fullText.slice(i));
+              s.fullText = i === 0 && parsed.output ? parsed.output : s.fullText.slice(0, i).trim();
+              break;
+            } catch {
+              continue;
+            }
+          }
         }
       }
+      s.fullText = s.fullText.replace(/\{"myField":"value"\}/g, '').trim();
+
+      if (s.timeSlots && s.timeSlots.length > 0) {
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === botId ? { ...msg, type: 'timeSlots' as const, timeSlots: s.timeSlots } : msg
+          )
+        );
+      }
+
+      const lower = s.fullText.toLowerCase();
+      if ((lower.includes('nombre') || lower.includes('name')) && (lower.includes('correo') || lower.includes('email'))) {
+        setStep('collect_info');
+      } else if (lower.includes('fecha') || lower.includes('date') || lower.includes('cuándo') || lower.includes('cuando')) {
+        setStep('collect_date');
+      } else if (lower.includes('cita confirmada') || lower.includes('appointment confirmed') || lower.includes('agendada') || lower.includes('scheduled')) {
+        setStep('confirmed');
+      }
     } catch {
-      const errorMsg: ChatMessage = {
-        id: `bot-error-${nextId()}`,
-        role: 'bot',
-        text: locale === 'es'
-          ? 'Lo siento, hubo un error. Por favor intenta de nuevo.'
-          : 'Sorry, there was an error. Please try again.',
-      };
-      setMessages((prev) => [...prev, errorMsg]);
+      setMessages((prev) => [
+        ...prev.filter(m => m.id !== botId),
+        {
+          id: `bot-error-${nextId()}`,
+          role: 'bot',
+          text: locale === 'es'
+            ? 'Lo siento, hubo un error. Por favor intenta de nuevo.'
+            : 'Sorry, there was an error. Please try again.',
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -176,74 +278,12 @@ export default function ScheduleChatbot({ open, onClose }: Props) {
 
   async function confirmDate() {
     if (!selectedDate || loading) return;
-
-    const userMsg: ChatMessage = {
-      id: `user-date-${nextId()}`,
-      role: 'user',
-      text: selectedDate,
-    };
-    setMessages((prev) => [...prev, userMsg]);
-    setLoading(true);
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'select_time', data: { date: selectedDate, locale } }),
-      });
-
-      const data = await res.json();
-      const botMsg: ChatMessage = {
-        id: `bot-slots-${nextId()}`,
-        role: 'bot',
-        text: data.reply,
-        type: 'timeSlots',
-        timeSlots: data.actionData?.timeSlots,
-      };
-      setMessages((prev) => [...prev, botMsg]);
-
-      if (data.action) {
-        setStep(data.action as ChatStep);
-        if (data.actionData) {
-          setStepData((prev) => ({ ...prev, ...data.actionData }));
-        }
-      }
-    } catch {
-      const errorMsg: ChatMessage = {
-        id: `bot-error-${nextId()}`,
-        role: 'bot',
-        text: locale === 'es'
-          ? 'Lo siento, no pude consultar la disponibilidad. Intenta de nuevo.'
-          : 'Sorry, I couldn\'t check availability. Please try again.',
-      };
-      setMessages((prev) => [...prev, errorMsg]);
-    } finally {
-      setLoading(false);
-    }
+    await sendMessage(selectedDate);
   }
 
   async function selectTimeSlot(slot: { start: string; end: string; label: string }) {
     if (loading) return;
-
-    const userMsg: ChatMessage = {
-      id: `user-time-${nextId()}`,
-      role: 'user',
-      text: slot.label,
-    };
-    setMessages((prev) => [...prev, userMsg]);
-    setStepData((prev) => ({ ...prev, time: slot.start.split('T')[1]?.split(':').slice(0, 2).join(':') || '09:00' }));
-    setLoading(true);
-    setStep('collect_info');
-
-    const botMsg: ChatMessage = {
-      id: `bot-info-${nextId()}`,
-      role: 'bot',
-      text: locale === 'es'
-        ? '¡Excelente elección! Para confirmar, por favor ingresa tu nombre y correo electrónico.\n\nEjemplo: "Me llamo Juan Pérez, mi correo es juan@ejemplo.com"'
-        : 'Great choice! To confirm, please enter your name and email.\n\nExample: "My name is John Doe, my email is john@example.com"',
-    };
-    setMessages((prev) => [...prev, botMsg]);
-    setLoading(false);
+    await sendMessage(slot.label);
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -274,7 +314,7 @@ export default function ScheduleChatbot({ open, onClose }: Props) {
         exit={{ opacity: 0, x: 50 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
         className="fixed right-0 z-50 flex w-[400px] max-w-full flex-col border-l border-white/10 bg-surface shadow-2xl shadow-primary/10"
-        style={{ top: 80, bottom: 0 }}
+        style={{ top: 80, height: 'calc(100vh - 80px)' }}
       >
         <div className="corporate-gradient flex shrink-0 items-center gap-3 px-5 py-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
