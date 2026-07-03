@@ -74,6 +74,11 @@
     "buttonPrimary": "Agenda una consultoría gratuita",
     "buttonSecondary": "Explorar servicios"
   },
+  "chatbot": {
+    "title": "Asistente LUMERAQ",
+    "subtitle": "Agenda tu consultoría",
+    "placeholder": "Escribe tu mensaje..."
+  },
   "footer": {
     "description": "Tecnología que transforma negocios a través de arquitectura de vanguardia.",
     "company": "Empresa",

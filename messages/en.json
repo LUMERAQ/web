@@ -74,6 +74,11 @@
     "buttonPrimary": "Schedule a free consultation",
     "buttonSecondary": "Explore services"
   },
+  "chatbot": {
+    "title": "LUMERAQ Assistant",
+    "subtitle": "Schedule your consultation",
+    "placeholder": "Type your message..."
+  },
   "footer": {
     "description": "Technology that transforms businesses through cutting-edge architecture.",
     "company": "Company",

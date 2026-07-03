@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import Link from 'next/link';
 import MaterialIcon from './MaterialIcon';
+import ScheduleChatbot from './ScheduleChatbot';
 import { siteConfig } from '@/lib/site';
 
 const navLinks = [
@@ -20,6 +21,7 @@ export default function Navbar() {
   const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [chatbotOpen, setChatbotOpen] = useState(false);
   const otherLocale = locale === 'es' ? 'en' : 'es';
 
   useEffect(() => {
@@ -61,12 +63,12 @@ export default function Navbar() {
           >
             <MaterialIcon name="language" />
           </Link>
-          <a
-            href="#contacto"
-            className="hidden rounded-lg corporate-gradient px-6 py-2 font-button-text text-button-text text-white transition-transform hover:scale-105 active:scale-95 lg:block"
+          <button
+            onClick={() => setChatbotOpen(true)}
+            className="hidden cursor-pointer rounded-lg corporate-gradient px-6 py-2 font-button-text text-button-text text-white transition-transform hover:scale-105 active:scale-95 lg:block"
           >
             {t('cta')}
-          </a>
+          </button>
           <button
             className="text-on-surface md:hidden"
             onClick={() => setMobileOpen(!mobileOpen)}
@@ -94,17 +96,20 @@ export default function Navbar() {
               <Link href={`/${otherLocale}`} className="text-sm text-on-surface-variant">
                 {otherLocale.toUpperCase()}
               </Link>
-              <a
-                href="#contacto"
-                onClick={() => setMobileOpen(false)}
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  setChatbotOpen(true);
+                }}
                 className="rounded-lg corporate-gradient px-6 py-2.5 font-button-text text-button-text text-white"
               >
                 {t('cta')}
-              </a>
+              </button>
             </div>
           </div>
         </div>
       )}
+      <ScheduleChatbot open={chatbotOpen} onClose={() => setChatbotOpen(false)} />
     </nav>
   );
 }
